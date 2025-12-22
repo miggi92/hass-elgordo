@@ -17,7 +17,7 @@ class ElGordoSensor(SensorEntity):
         self._ticket_number = ticket_number
         self._state = None
         self._attr_name = f"El Gordo Ticket {ticket_number}"
-        self._attr_unique_id = f"elgordo_{ticket_number}"
+        self._attr_unique_id = f"{DOMAIN}_{ticket_number}"
         self._attr_native_unit_of_measurement = "€"
 
     @property
