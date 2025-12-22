@@ -1,6 +1,6 @@
 from datetime import timedelta
 import logging
-import async_timeout
+import asyncio
 import requests
 import json
 
@@ -32,7 +32,7 @@ class ElGordoCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Fetch data from API."""
         try:
-            async with async_timeout.timeout(15):
+            async with asyncio.timeout(15):
                 # Fetch ticket specific data
                 ticket_url = f"{BASE_API_URL}?n={self.ticket_number}"
                 summary_url = f"{BASE_API_URL}?n=resumen"
