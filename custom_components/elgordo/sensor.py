@@ -41,6 +41,10 @@ class TicketPrizeSensor(ElGordoBaseSensor):
     def native_value(self):
         return self.coordinator.data["ticket"].get("premio", 0)
 
+    @property
+    def icon(self):
+        return "mdi:ticket-confirmation" if self.native_value > 0 else "mdi:ticket-outline"
+
 class MainPrizeSensor(ElGordoBaseSensor):
     """Sensor for general winning numbers (Gordo, 2nd, 3rd)."""
     def __init__(self, coordinator, key, api_key, label):
@@ -52,3 +56,7 @@ class MainPrizeSensor(ElGordoBaseSensor):
     @property
     def native_value(self):
         return self.coordinator.data["summary"].get(self._api_key)
+    
+    @property
+    def icon(self):
+        return "mdi:trophy-variant"
