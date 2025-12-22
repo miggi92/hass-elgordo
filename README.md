@@ -7,3 +7,19 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/miggi92/hass-elgordo?style=for-the-badge)
 
 El Gordo Home Assistant Component
+
+## Installation
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=miggi92&repository=hass-elgordo&category=Integration)
+
+### HACS (recommended)
+
+1. Open HACS
+2. add this repository as a custom repository
+3. search for "El Gordo" in the HACS store
+4. install the integration
+5. restart Home Assistant
+
+### Manual
+
+Copy the `custom_components/elgordo` folder to your Home Assistant `custom_components` folder. Then restart Home Assistant.
