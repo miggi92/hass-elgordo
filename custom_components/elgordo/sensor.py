@@ -1,40 +1,54 @@
-import requests
-from datetime import timedelta
 from homeassistant.components.sensor import SensorEntity
-from .const import DOMAIN, BASE_API_URL
-
-SCAN_INTERVAL = timedelta(minutes=60)
+from .const import DOMAIN
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up the sensor platform."""
-    ticket_number = entry.data["number"]
-    async_add_entities([ElGordoSensor(ticket_number)], True)
+    """Set up sensors based on a config entry."""
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+    
+    entities = [
+        TicketPrizeSensor(coordinator),
+        MainPrizeSensor(coordinator, "first_prize", "numero1", "El Gordo"),
+        MainPrizeSensor(coordinator, "second_prize", "numero2", "Second Prize"),
+        MainPrizeSensor(coordinator, "third_prize", "numero3", "Third Prize"),
+    ]
+    async_add_entities(entities)
 
-class ElGordoSensor(SensorEntity):
-    """Representation of an El Gordo sensor."""
+class ElGordoBaseSensor(SensorEntity):
+    """Base class for El Gordo sensors."""
+    def __init__(self, coordinator):
+        self.coordinator = coordinator
+    
+    @property
+    def should_poll(self):
+        return False
 
-    def __init__(self, ticket_number):
-        self._ticket_number = ticket_number
-        self._state = None
-        self._attr_name = f"El Gordo Ticket {ticket_number}"
-        self._attr_unique_id = f"{DOMAIN}_{ticket_number}"
+    @property
+    def available(self):
+        return self.coordinator.last_update_success
+
+    async def async_added_to_hass(self):
+        self.async_on_remove(self.coordinator.async_add_listener(self.async_write_ha_state))
+
+class TicketPrizeSensor(ElGordoBaseSensor):
+    """Sensor for the user's specific ticket prize."""
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+        self._attr_name = f"Prize Ticket {coordinator.ticket_number}"
+        self._attr_unique_id = f"{DOMAIN}_prize_{coordinator.ticket_number}"
         self._attr_native_unit_of_measurement = "€"
 
     @property
     def native_value(self):
-        return self._state
+        return self.coordinator.data["ticket"].get("premio", 0)
 
-    def update(self):
-        """Fetch new state data for the sensor."""
-        def fetch():
-            api_url = f"{BASE_API_URL}?n={self._ticket_number}"
-            return requests.get(api_url, timeout=10)
+class MainPrizeSensor(ElGordoBaseSensor):
+    """Sensor for general winning numbers (Gordo, 2nd, 3rd)."""
+    def __init__(self, coordinator, key, api_key, label):
+        super().__init__(coordinator)
+        self._api_key = api_key
+        self._attr_name = f"Winning Number {label}"
+        self._attr_unique_id = f"{DOMAIN}_winning_{key}"
 
-        try:
-            response = self.hass.add_executor_job(fetch)
-            clean_json = response.text.replace('busqueda=', '')
-            import json
-            data = json.loads(clean_json)
-            self._state = data.get('premio', 0)
-        except Exception:
-            self._state = None
+    @property
+    def native_value(self):
+        return self.coordinator.data["summary"].get(self._api_key)
