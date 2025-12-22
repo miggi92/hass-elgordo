@@ -7,7 +7,7 @@ SCAN_INTERVAL = timedelta(minutes=60)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up the sensor platform."""
-    ticket_number = entry.data["ticket_number"]
+    ticket_number = entry.data["number"]
     async_add_entities([ElGordoSensor(ticket_number)], True)
 
 class ElGordoSensor(SensorEntity):
