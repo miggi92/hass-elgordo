@@ -18,28 +18,27 @@ class ElGordoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema({
-                vol.Required("tickets", default="12345"): str,
+                vol.Required("tickets", default="27133"): str,
             })
         )
 
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        """Hier wird der Options Handler verknüpft."""
+        """Verknüpft den Options-Dialog für nachträgliche Änderungen."""
         return ElGordoOptionsFlowHandler(config_entry)
 
 class ElGordoOptionsFlowHandler(config_entries.OptionsFlow):
-    """Handler für das 'Konfigurieren' Menü."""
+    """Handler für das Menü unter 'Konfigurieren'."""
     def __init__(self, config_entry):
         self.config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
-        """Dialog zum Hinzufügen/Entfernen von Tickets."""
+        """Dialog zum Ändern der Ticket-Liste."""
         if user_input is not None:
-            # Speichert die neuen Tickets in entry.options
             return self.async_create_entry(title="", data=user_input)
 
-        # Aktuelle Liste laden (entweder aus options oder initial aus data)
+        # Aktuelle Liste aus den Optionen oder den Initial-Daten laden
         current_tickets = self.config_entry.options.get(
             "tickets", self.config_entry.data.get("tickets", "")
         )
