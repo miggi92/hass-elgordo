@@ -23,9 +23,17 @@ class ElGordoCoordinator(DataUpdateCoordinator):
         )
 
     def _fetch_data(self, url):
-        response = requests.get(url, timeout=10)
-        content = response.text.replace('busqueda=', '')
-        return json.loads(content)
+        """Fetch data and strip any JavaScript-style prefixes to get pure JSON."""
+        response = requests.get(url, timeout=15)
+        text = response.text
+        
+        start_index = text.find('{')
+        if start_index != -1:
+            clean_json = text[start_index:]
+            import json
+            return json.loads(clean_json)
+        
+        return None
 
     async def _async_update_data(self):
         # Tickets aus Optionen oder Daten laden
