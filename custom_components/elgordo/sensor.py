@@ -1,7 +1,7 @@
 import requests
 from datetime import timedelta
 from homeassistant.components.sensor import SensorEntity
-from .const import DOMAIN
+from .const import DOMAIN, BASE_API_URL
 
 SCAN_INTERVAL = timedelta(minutes=60)
 
@@ -26,10 +26,12 @@ class ElGordoSensor(SensorEntity):
 
     def update(self):
         """Fetch new state data for the sensor."""
-        api_url = f"https://api.elpais.com/ws/LoteriaNavidadPremiados?n={self._ticket_number}"
+        def fetch():
+            api_url = f"{BASE_API_URL}?n={self._ticket_number}"
+            return requests.get(api_url, timeout=10)
+
         try:
-            response = requests.get(api_url, timeout=10)
-            # Remove the 'busqueda=' prefix from the API response
+            response = self.hass.add_executor_job(fetch)
             clean_json = response.text.replace('busqueda=', '')
             import json
             data = json.loads(clean_json)
