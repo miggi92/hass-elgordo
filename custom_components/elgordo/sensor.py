@@ -4,13 +4,17 @@ from .const import DOMAIN
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up sensors based on a config entry."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
+
+    entities = [TicketPrizeSensor(coordinator)]
     
-    entities = [
-        TicketPrizeSensor(coordinator),
-        MainPrizeSensor(coordinator, "first_prize", "numero1", "El Gordo"),
-        MainPrizeSensor(coordinator, "second_prize", "numero2", "Second Prize"),
-        MainPrizeSensor(coordinator, "third_prize", "numero3", "Third Prize"),
-    ]
+    if not hass.data[DOMAIN].get("global_sensors_created"):
+        entities.extend([
+            MainPrizeSensor(coordinator, "first_prize", "numero1", "El Gordo"),
+            MainPrizeSensor(coordinator, "second_prize", "numero2", "Second Prize"),
+            MainPrizeSensor(coordinator, "third_prize", "numero3", "Third Prize"),
+        ])
+        hass.data[DOMAIN]["global_sensors_created"] = True
+    
     async_add_entities(entities)
 
 class ElGordoBaseSensor(SensorEntity):
