@@ -3,18 +3,18 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN, MANUFACTURER
 
 async def async_setup_entry(hass, entry, async_add_entities):
+    """Set up sensors based on a config entry."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     
-    # Tickets laden
     tickets_str = entry.options.get("tickets", entry.data.get("tickets", ""))
     tickets = [t.strip() for t in tickets_str.split(",") if t.strip()]
     
     entities = []
-    # Ticket Sensoren
+    # Individual Ticket Sensors
     for ticket in tickets:
         entities.append(TicketPrizeSensor(coordinator, ticket))
     
-    # Hauptpreise
+    # Global Prize Sensors
     entities.extend([
         MainPrizeSensor(coordinator, "first_prize", "numero1", "El Gordo"),
         MainPrizeSensor(coordinator, "second_prize", "numero2", "Second Prize"),
@@ -24,6 +24,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     async_add_entities(entities)
 
 class ElGordoBaseSensor(CoordinatorEntity, SensorEntity):
+    """Base sensor with shared Device Info."""
     def __init__(self, coordinator):
         super().__init__(coordinator)
         self._attr_device_info = {
@@ -34,6 +35,7 @@ class ElGordoBaseSensor(CoordinatorEntity, SensorEntity):
         }
 
 class TicketPrizeSensor(ElGordoBaseSensor):
+    """Sensor for a specific ticket."""
     def __init__(self, coordinator, ticket):
         super().__init__(coordinator)
         self.ticket = ticket
@@ -51,6 +53,7 @@ class TicketPrizeSensor(ElGordoBaseSensor):
         return "mdi:ticket-confirmation" if (self.native_value or 0) > 0 else "mdi:ticket-outline"
 
 class MainPrizeSensor(ElGordoBaseSensor):
+    """Sensor for general winning numbers."""
     def __init__(self, coordinator, key, api_key, label):
         super().__init__(coordinator)
         self._api_key = api_key

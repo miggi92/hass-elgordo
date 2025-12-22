@@ -9,6 +9,8 @@ from .const import DOMAIN, BASE_API_URL
 _LOGGER = logging.getLogger(__name__)
 
 class ElGordoCoordinator(DataUpdateCoordinator):
+    """Class to manage fetching El Gordo data."""
+
     def __init__(self, hass, entry):
         self.entry = entry
         super().__init__(
@@ -19,12 +21,13 @@ class ElGordoCoordinator(DataUpdateCoordinator):
         )
 
     def _fetch_data(self, url):
+        """Fetch and clean JSON data."""
         response = requests.get(url, timeout=10)
         content = response.text.replace('busqueda=', '')
         return json.loads(content)
 
     async def _async_update_data(self):
-        # Tickets aus Optionen oder Basis-Daten laden
+        """Fetch data from API."""
         tickets_str = self.entry.options.get("tickets", self.entry.data.get("tickets", ""))
         tickets = [t.strip() for t in tickets_str.split(",") if t.strip()]
         
