@@ -1,0 +1,7 @@
+{
+    "name": "El Gordo Integration",
+    "homeassistant": "2025.12.1",
+    "render_readme": true,
+    "zip_release": true,
+    "filename": "elgordo.zip"
+  }
