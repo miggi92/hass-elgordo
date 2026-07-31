@@ -58,6 +58,7 @@ Treat the coordinator data shape, config key names, unique IDs, and domain as co
 ## Change Guidelines
 
 - Make the smallest change that solves the requested behavior and follow existing module boundaries.
+- **When implementing or modifying prize evaluation, you must strictly use the lottery logic defined in the `LOTERY_LOGIC.md` file.**
 - Preserve leading zeroes in five-digit lottery numbers.
 - Avoid duplicating ticket parsing or API interpretation when adding behavior; introduce a focused helper only when it removes actual duplication.
 - Update both `en.json` and `de.json` when adding or changing user-facing translation keys.
