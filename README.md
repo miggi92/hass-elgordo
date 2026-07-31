@@ -8,6 +8,18 @@
 
 El Gordo Home Assistant Component
 
+## Result fallback
+
+The integration normally displays the current draw reported by the El Pais
+lottery endpoint. Outside the draw period, the endpoint may respond without any
+results. In that case, the three main prize sensors continue to display the
+verified 2025 results and expose `data_source: stored_results` and
+`draw_year: 2025` as state attributes.
+
+Ticket prize sensors are unavailable while the fallback is active. The stored
+results only contain the three main winning numbers, so reporting `0 EUR` for a
+ticket without checking the complete prize list would be misleading.
+
 ## Installation
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=miggi92&repository=hass-elgordo&category=Integration)
