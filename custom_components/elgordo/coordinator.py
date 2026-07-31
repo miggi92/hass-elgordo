@@ -19,7 +19,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-SUMMARY_KEYS = ("numero1", "numero2", "numero3")
+SUMMARY_KEYS = ("numero1", "numero2", "numero3", "numero4", "numero5")
 
 
 class ElGordoCoordinator(DataUpdateCoordinator):

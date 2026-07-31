@@ -13,10 +13,10 @@ El Gordo Home Assistant Component
 The integration normally displays the current draw reported by the El Pais
 lottery endpoint. Outside the draw period, the endpoint may respond without any
 results. Every complete draw summary is stored by Home Assistant. In that case,
-the three main prize sensors continue to display the most recently stored draw
-and expose `data_source: stored_results` and its `draw_year` as state attributes.
-The verified 2025 results are used only until the integration has stored its
-first complete API response.
+the five drawn main prize number sensors continue to display the most recently
+stored draw and expose `data_source: stored_results` and its `draw_year` as state
+attributes. The verified 2025 results are used only until the integration has
+stored its first complete API response.
 
 Ticket prize sensors are generally unavailable while the fallback is active.
 The built-in 2025 fallback includes the verified result for ticket `27133`, so

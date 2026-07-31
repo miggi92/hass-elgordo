@@ -21,6 +21,12 @@ async def async_setup_entry(hass, entry, async_add_entities):
             MainPrizeSensor(coordinator, "first_prize", "numero1", "El Gordo"),
             MainPrizeSensor(coordinator, "second_prize", "numero2", "Second Prize"),
             MainPrizeSensor(coordinator, "third_prize", "numero3", "Third Prize"),
+            MainPrizeSensor(
+                coordinator, "fourth_prize_1", "numero4", "Fourth Prize 1"
+            ),
+            MainPrizeSensor(
+                coordinator, "fourth_prize_2", "numero5", "Fourth Prize 2"
+            ),
         ]
     )
 

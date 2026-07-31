@@ -9,6 +9,8 @@ INITIAL_FALLBACK_SUMMARY = {
     "numero1": "79432",
     "numero2": "70048",
     "numero3": "90693",
+    "numero4": "78477",
+    "numero5": "25508",
 }
 
 INITIAL_FALLBACK_TICKETS = {
