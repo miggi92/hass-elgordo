@@ -5,9 +5,16 @@ import logging
 
 import requests
 
+from homeassistant.helpers.storage import Store
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.util import dt as dt_util
 
-from .const import BASE_API_URL, FALLBACK_SUMMARY
+from .const import (
+    BASE_API_URL,
+    DOMAIN,
+    INITIAL_FALLBACK_SUMMARY,
+    STORAGE_VERSION,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,12 +27,25 @@ class ElGordoCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, entry):
         """Initialize."""
         self.entry = entry
+        self._store = Store(hass, STORAGE_VERSION, f"{DOMAIN}.{entry.entry_id}")
+        self._fallback_summary = INITIAL_FALLBACK_SUMMARY.copy()
         super().__init__(
             hass,
             _LOGGER,
             name="El Gordo",
             update_interval=timedelta(minutes=30),
         )
+
+    async def async_load_stored_summary(self):
+        """Load the most recent complete draw summary from storage."""
+        stored_summary = await self._store.async_load()
+        if self._has_current_summary(stored_summary) and isinstance(
+            stored_summary.get("draw_year"), int
+        ):
+            self._fallback_summary = {
+                **stored_summary,
+                "data_source": "stored_results",
+            }
 
     def _fetch_data(self, url):
         """Fetch data and strip any JavaScript-style prefixes to get pure JSON."""
@@ -62,10 +82,20 @@ class ElGordoCoordinator(DataUpdateCoordinator):
                 )
 
                 if not self._has_current_summary(summary):
-                    results["summary"] = FALLBACK_SUMMARY.copy()
+                    results["summary"] = self._fallback_summary.copy()
                     return results
 
-                results["summary"] = summary
+                current_summary = {
+                    **summary,
+                    "data_source": "live_api",
+                    "draw_year": dt_util.now().year,
+                }
+                results["summary"] = current_summary
+                self._fallback_summary = {
+                    **current_summary,
+                    "data_source": "stored_results",
+                }
+                await self._store.async_save(self._fallback_summary)
 
                 for ticket in tickets:
                     ticket_url = f"{BASE_API_URL}?n={ticket}"
