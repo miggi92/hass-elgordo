@@ -3,9 +3,10 @@
         "step": {
             "user": {
                 "title": "El Gordo konfigurieren",
-                "description": "Gib eine oder mehrere Losnummern durch Kommas getrennt ein.",
+                "description": "Gib eine oder mehrere fünfstellige Losnummern durch Kommas getrennt ein. Die Losart gilt für alle eingegebenen Nummern.",
                 "data": {
-                    "tickets": "Losnummern"
+                    "tickets": "Losnummern",
+                    "ticket_type": "Losart (Décimo oder Billete)"
                 }
             }
         },
@@ -17,9 +18,10 @@
         "step": {
             "init": {
                 "title": "Losnummern bearbeiten",
-                "description": "Gib eine oder mehrere Losnummern durch Kommas getrennt ein.",
+                "description": "Gib eine oder mehrere fünfstellige Losnummern durch Kommas getrennt ein. Die Losart gilt für alle eingegebenen Nummern.",
                 "data": {
-                    "tickets": "Losnummern"
+                    "tickets": "Losnummern",
+                    "ticket_type": "Losart (Décimo oder Billete)"
                 }
             }
         }

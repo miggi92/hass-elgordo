@@ -1,7 +1,14 @@
 import asyncio
 from types import SimpleNamespace
 
-from custom_components.elgordo.const import INITIAL_FALLBACK_SUMMARY
+import pytest
+
+from custom_components.elgordo.const import (
+    INITIAL_FALLBACK_SUMMARY,
+    TICKET_TYPE_BILLETE,
+    TICKET_TYPE_DECIMO,
+    prize_for_ticket_type,
+)
 from custom_components.elgordo.coordinator import ElGordoCoordinator, SUMMARY_KEYS
 
 
@@ -30,3 +37,12 @@ def test_summary_requires_all_five_drawn_prize_numbers():
     assert not ElGordoCoordinator._has_current_summary(
         {key: complete_summary[key] for key in SUMMARY_KEYS[:3]}
     )
+
+
+def test_prize_is_converted_from_billete_to_configured_ticket_type():
+    assert prize_for_ticket_type(4_000_000, TICKET_TYPE_BILLETE) == 4_000_000
+    assert prize_for_ticket_type(4_000_000, TICKET_TYPE_DECIMO) == 400_000
+    assert prize_for_ticket_type(1_000, TICKET_TYPE_DECIMO) == 100
+
+    with pytest.raises(ValueError, match="Unsupported ticket type"):
+        prize_for_ticket_type(1_000, "unknown")

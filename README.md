@@ -8,6 +8,12 @@
 
 El Gordo Home Assistant Component
 
+During setup, enter one or more five-digit ticket numbers and select whether
+they are décimos or full billetes. The selected ticket type applies to every
+configured number. The El Pais API reports prizes per billete; décimo sensors
+therefore display one tenth of that amount. Existing configurations default to
+the commonly used décimo.
+
 ## Result fallback
 
 The integration normally displays the current draw reported by the El Pais

@@ -3,9 +3,10 @@
         "step": {
             "user": {
                 "title": "Configure El Gordo",
-                "description": "Enter one or more ticket numbers separated by commas.",
+                "description": "Enter one or more five-digit ticket numbers separated by commas. The ticket type applies to every entered number.",
                 "data": {
-                    "tickets": "Ticket numbers"
+                    "tickets": "Ticket numbers",
+                    "ticket_type": "Ticket type (decimo or billete)"
                 }
             }
         },
@@ -17,9 +18,10 @@
         "step": {
             "init": {
                 "title": "Edit ticket numbers",
-                "description": "Enter one or more ticket numbers separated by commas.",
+                "description": "Enter one or more five-digit ticket numbers separated by commas. The ticket type applies to every entered number.",
                 "data": {
-                    "tickets": "Ticket numbers"
+                    "tickets": "Ticket numbers",
+                    "ticket_type": "Ticket type (decimo or billete)"
                 }
             }
         }

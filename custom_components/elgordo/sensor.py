@@ -1,6 +1,13 @@
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .const import DOMAIN, MANUFACTURER
+
+from .const import (
+    DEFAULT_TICKET_TYPE,
+    DOMAIN,
+    MANUFACTURER,
+    TICKET_TYPE_DECIMO,
+    prize_for_ticket_type,
+)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -9,11 +16,14 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     tickets_str = entry.options.get("tickets", entry.data.get("tickets", ""))
     tickets = [t.strip() for t in tickets_str.split(",") if t.strip()]
+    ticket_type = entry.options.get(
+        "ticket_type", entry.data.get("ticket_type", DEFAULT_TICKET_TYPE)
+    )
 
     entities = []
     # Individual Ticket Sensors
     for ticket in tickets:
-        entities.append(TicketPrizeSensor(coordinator, ticket))
+        entities.append(TicketPrizeSensor(coordinator, ticket, ticket_type))
 
     # Global Prize Sensors
     entities.extend(
@@ -49,9 +59,10 @@ class ElGordoBaseSensor(CoordinatorEntity, SensorEntity):
 class TicketPrizeSensor(ElGordoBaseSensor):
     """Sensor for a specific ticket."""
 
-    def __init__(self, coordinator, ticket):
+    def __init__(self, coordinator, ticket, ticket_type):
         super().__init__(coordinator)
         self.ticket = ticket
+        self.ticket_type = ticket_type
         self._attr_name = f"Ticket {ticket} Prize"
         self._attr_unique_id = f"{DOMAIN}_prize_{ticket}"
         self._attr_native_unit_of_measurement = "€"
@@ -59,7 +70,16 @@ class TicketPrizeSensor(ElGordoBaseSensor):
     @property
     def native_value(self):
         ticket_data = self.coordinator.data["tickets"].get(self.ticket, {})
-        return ticket_data.get("premio")
+        return prize_for_ticket_type(ticket_data.get("premio"), self.ticket_type)
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            "ticket_type": self.ticket_type,
+            "ticket_type_name": (
+                "Décimo" if self.ticket_type == TICKET_TYPE_DECIMO else "Billete"
+            ),
+        }
 
     @property
     def available(self):
