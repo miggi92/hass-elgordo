@@ -1,4 +1,29 @@
 {
+    "config": {
+        "step": {
+            "user": {
+                "title": "Configure El Gordo",
+                "description": "Enter one or more ticket numbers separated by commas.",
+                "data": {
+                    "tickets": "Ticket numbers"
+                }
+            }
+        },
+        "abort": {
+            "already_configured": "El Gordo is already configured."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Edit ticket numbers",
+                "description": "Enter one or more ticket numbers separated by commas.",
+                "data": {
+                    "tickets": "Ticket numbers"
+                }
+            }
+        }
+    },
     "entity": {
         "sensor": {
             "first_prize": { "name": "First prize (El Gordo)" },

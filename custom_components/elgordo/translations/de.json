@@ -1,4 +1,29 @@
 {
+    "config": {
+        "step": {
+            "user": {
+                "title": "El Gordo konfigurieren",
+                "description": "Gib eine oder mehrere Losnummern durch Kommas getrennt ein.",
+                "data": {
+                    "tickets": "Losnummern"
+                }
+            }
+        },
+        "abort": {
+            "already_configured": "El Gordo ist bereits konfiguriert."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Losnummern bearbeiten",
+                "description": "Gib eine oder mehrere Losnummern durch Kommas getrennt ein.",
+                "data": {
+                    "tickets": "Losnummern"
+                }
+            }
+        }
+    },
     "entity": {
         "sensor": {
             "first_prize": { "name": "Hauptpreis (El Gordo)" },

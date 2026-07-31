@@ -26,12 +26,10 @@ class ElGordoConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry):
         """Verknüpft den Options-Dialog für nachträgliche Änderungen."""
-        return ElGordoOptionsFlowHandler(config_entry)
+        return ElGordoOptionsFlowHandler()
 
 class ElGordoOptionsFlowHandler(config_entries.OptionsFlow):
     """Handler für das Menü unter 'Konfigurieren'."""
-    def __init__(self, config_entry):
-        self.config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
         """Dialog zum Ändern der Ticket-Liste."""
