@@ -18,9 +18,10 @@ and expose `data_source: stored_results` and its `draw_year` as state attributes
 The verified 2025 results are used only until the integration has stored its
 first complete API response.
 
-Ticket prize sensors are unavailable while the fallback is active. The stored
-results only contain the three main winning numbers, so reporting `0 EUR` for a
-ticket without checking the complete prize list would be misleading.
+Ticket prize sensors are generally unavailable while the fallback is active.
+The built-in 2025 fallback includes the verified result for ticket `27133`, so
+that sensor reports `0 EUR`. Other tickets remain unavailable because reporting
+`0 EUR` without checking the complete prize list would be misleading.
 
 ## Installation
 

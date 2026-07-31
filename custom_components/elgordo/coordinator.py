@@ -13,6 +13,7 @@ from .const import (
     BASE_API_URL,
     DOMAIN,
     INITIAL_FALLBACK_SUMMARY,
+    INITIAL_FALLBACK_TICKETS,
     STORAGE_VERSION,
 )
 
@@ -83,6 +84,12 @@ class ElGordoCoordinator(DataUpdateCoordinator):
 
                 if not self._has_current_summary(summary):
                     results["summary"] = self._fallback_summary.copy()
+                    if self._fallback_summary.get("draw_year") == 2025:
+                        results["tickets"] = {
+                            ticket: INITIAL_FALLBACK_TICKETS[ticket].copy()
+                            for ticket in tickets
+                            if ticket in INITIAL_FALLBACK_TICKETS
+                        }
                     return results
 
                 current_summary = {

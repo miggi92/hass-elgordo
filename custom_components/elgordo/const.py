@@ -10,3 +10,7 @@ INITIAL_FALLBACK_SUMMARY = {
     "numero2": "70048",
     "numero3": "90693",
 }
+
+INITIAL_FALLBACK_TICKETS = {
+    "27133": {"premio": 0},
+}
