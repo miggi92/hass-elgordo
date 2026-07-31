@@ -35,6 +35,14 @@ INITIAL_FALLBACK_SUMMARY = {
     "numero3": "90693",
     "numero4": "78477",
     "numero5": "25508",
+    "numero6": "23112",
+    "numero7": "60649",
+    "numero8": "77715",
+    "numero9": "25412",
+    "numero10": "61366",
+    "numero11": "94273",
+    "numero12": "41716",
+    "numero13": "18669",
 }
 
 INITIAL_FALLBACK_TICKETS = {

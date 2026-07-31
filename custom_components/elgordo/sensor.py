@@ -55,6 +55,54 @@ MAIN_PRIZE_SENSORS = (
         api_key="numero5",
         icon="mdi:trophy-variant",
     ),
+    MainPrizeSensorEntityDescription(
+        key="fifth_prize_1",
+        translation_key="fifth_prize_1",
+        api_key="numero6",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fifth_prize_2",
+        translation_key="fifth_prize_2",
+        api_key="numero7",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fifth_prize_3",
+        translation_key="fifth_prize_3",
+        api_key="numero8",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fifth_prize_4",
+        translation_key="fifth_prize_4",
+        api_key="numero9",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fifth_prize_5",
+        translation_key="fifth_prize_5",
+        api_key="numero10",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fifth_prize_6",
+        translation_key="fifth_prize_6",
+        api_key="numero11",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fifth_prize_7",
+        translation_key="fifth_prize_7",
+        api_key="numero12",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fifth_prize_8",
+        translation_key="fifth_prize_8",
+        api_key="numero13",
+        icon="mdi:trophy-variant",
+    ),
 )
 
 

@@ -19,7 +19,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-SUMMARY_KEYS = ("numero1", "numero2", "numero3", "numero4", "numero5")
+SUMMARY_KEYS = tuple(f"numero{index}" for index in range(1, 14))
 
 
 class ElGordoCoordinator(DataUpdateCoordinator):

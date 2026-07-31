@@ -31,13 +31,28 @@ def test_verified_ticket_is_available_during_2025_fallback():
     assert result["tickets"] == {"27133": {"premio": 0}}
 
 
-def test_summary_requires_all_five_drawn_prize_numbers():
-    complete_summary = {key: str(index) for index, key in enumerate(SUMMARY_KEYS)}
+def test_summary_requires_all_thirteen_drawn_prize_numbers():
+    complete_summary = {
+        key: str(index) for index, key in enumerate(SUMMARY_KEYS, start=1)
+    }
 
     assert ElGordoCoordinator._has_current_summary(complete_summary)
     assert not ElGordoCoordinator._has_current_summary(
-        {key: complete_summary[key] for key in SUMMARY_KEYS[:3]}
+        {key: complete_summary[key] for key in SUMMARY_KEYS[:-1]}
     )
+
+
+def test_fallback_contains_all_2025_fifth_prizes():
+    assert [INITIAL_FALLBACK_SUMMARY[key] for key in SUMMARY_KEYS[5:]] == [
+        "23112",
+        "60649",
+        "77715",
+        "25412",
+        "61366",
+        "94273",
+        "41716",
+        "18669",
+    ]
 
 
 def test_prize_is_converted_from_billete_to_configured_ticket_type():
