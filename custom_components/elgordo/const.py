@@ -20,6 +20,13 @@ def prize_for_ticket_type(prize, ticket_type):
         return prize / 10
     raise ValueError(f"Unsupported ticket type: {ticket_type}")
 
+
+def normalize_ticket_number(ticket_number):
+    """Return a lottery number as a five-digit string."""
+    if ticket_number is None:
+        return None
+    return str(ticket_number).zfill(5)
+
 INITIAL_FALLBACK_SUMMARY = {
     "data_source": "stored_results",
     "draw_year": 2025,

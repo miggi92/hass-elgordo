@@ -31,6 +31,8 @@
             "first_prize": { "name": "First prize (El Gordo)" },
             "second_prize": { "name": "Second prize" },
             "third_prize": { "name": "Third prize" },
+            "fourth_prize_1": { "name": "Fourth prize 1" },
+            "fourth_prize_2": { "name": "Fourth prize 2" },
             "ticket_prize": { "name": "Ticket prize {ticket}" }
         }
     }

@@ -1,12 +1,60 @@
-from homeassistant.components.sensor import SensorEntity
+from dataclasses import dataclass
+
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+)
+from homeassistant.const import CURRENCY_EURO
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
     DEFAULT_TICKET_TYPE,
     DOMAIN,
     MANUFACTURER,
-    TICKET_TYPE_DECIMO,
+    normalize_ticket_number,
     prize_for_ticket_type,
+)
+
+
+@dataclass(frozen=True, kw_only=True)
+class MainPrizeSensorEntityDescription(SensorEntityDescription):
+    """Describe an El Gordo main prize sensor."""
+
+    api_key: str
+
+
+MAIN_PRIZE_SENSORS = (
+    MainPrizeSensorEntityDescription(
+        key="first_prize",
+        translation_key="first_prize",
+        api_key="numero1",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="second_prize",
+        translation_key="second_prize",
+        api_key="numero2",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="third_prize",
+        translation_key="third_prize",
+        api_key="numero3",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fourth_prize_1",
+        translation_key="fourth_prize_1",
+        api_key="numero4",
+        icon="mdi:trophy-variant",
+    ),
+    MainPrizeSensorEntityDescription(
+        key="fourth_prize_2",
+        translation_key="fourth_prize_2",
+        api_key="numero5",
+        icon="mdi:trophy-variant",
+    ),
 )
 
 
@@ -25,19 +73,9 @@ async def async_setup_entry(hass, entry, async_add_entities):
     for ticket in tickets:
         entities.append(TicketPrizeSensor(coordinator, ticket, ticket_type))
 
-    # Global Prize Sensors
     entities.extend(
-        [
-            MainPrizeSensor(coordinator, "first_prize", "numero1", "El Gordo"),
-            MainPrizeSensor(coordinator, "second_prize", "numero2", "Second Prize"),
-            MainPrizeSensor(coordinator, "third_prize", "numero3", "Third Prize"),
-            MainPrizeSensor(
-                coordinator, "fourth_prize_1", "numero4", "Fourth Prize 1"
-            ),
-            MainPrizeSensor(
-                coordinator, "fourth_prize_2", "numero5", "Fourth Prize 2"
-            ),
-        ]
+        MainPrizeSensor(coordinator, description)
+        for description in MAIN_PRIZE_SENSORS
     )
 
     async_add_entities(entities)
@@ -45,6 +83,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 class ElGordoBaseSensor(CoordinatorEntity, SensorEntity):
     """Base sensor with shared Device Info."""
+
+    _attr_has_entity_name = True
 
     def __init__(self, coordinator):
         super().__init__(coordinator)
@@ -59,31 +99,34 @@ class ElGordoBaseSensor(CoordinatorEntity, SensorEntity):
 class TicketPrizeSensor(ElGordoBaseSensor):
     """Sensor for a specific ticket."""
 
+    _attr_device_class = SensorDeviceClass.MONETARY
+    _attr_native_unit_of_measurement = CURRENCY_EURO
+    _attr_suggested_display_precision = 0
+    _attr_translation_key = "ticket_prize"
+
     def __init__(self, coordinator, ticket, ticket_type):
         super().__init__(coordinator)
         self.ticket = ticket
         self.ticket_type = ticket_type
-        self._attr_name = f"Ticket {ticket} Prize"
+        self._attr_translation_placeholders = {"ticket": ticket}
         self._attr_unique_id = f"{DOMAIN}_prize_{ticket}"
-        self._attr_native_unit_of_measurement = "€"
 
     @property
     def native_value(self):
-        ticket_data = self.coordinator.data["tickets"].get(self.ticket, {})
+        tickets = (self.coordinator.data or {}).get("tickets", {})
+        ticket_data = tickets.get(self.ticket, {})
         return prize_for_ticket_type(ticket_data.get("premio"), self.ticket_type)
 
     @property
     def extra_state_attributes(self):
         return {
             "ticket_type": self.ticket_type,
-            "ticket_type_name": (
-                "Décimo" if self.ticket_type == TICKET_TYPE_DECIMO else "Billete"
-            ),
         }
 
     @property
     def available(self):
-        return super().available and self.ticket in self.coordinator.data["tickets"]
+        tickets = (self.coordinator.data or {}).get("tickets", {})
+        return super().available and self.ticket in tickets
 
     @property
     def icon(self):
@@ -97,26 +140,24 @@ class TicketPrizeSensor(ElGordoBaseSensor):
 class MainPrizeSensor(ElGordoBaseSensor):
     """Sensor for general winning numbers."""
 
-    def __init__(self, coordinator, key, api_key, label):
+    entity_description: MainPrizeSensorEntityDescription
+
+    def __init__(self, coordinator, description):
         super().__init__(coordinator)
-        self._api_key = api_key
-        self._attr_name = f"Winning Number {label}"
-        self._attr_unique_id = f"{DOMAIN}_winning_{key}"
+        self.entity_description = description
+        self._attr_unique_id = f"{DOMAIN}_winning_{description.key}"
 
     @property
     def native_value(self):
-        return self.coordinator.data["summary"].get(self._api_key)
+        summary = (self.coordinator.data or {}).get("summary", {})
+        return normalize_ticket_number(summary.get(self.entity_description.api_key))
 
     @property
     def extra_state_attributes(self):
-        summary = self.coordinator.data["summary"]
+        summary = (self.coordinator.data or {}).get("summary", {})
         if "draw_year" not in summary:
             return None
         return {
-            "data_source": summary["data_source"],
+            "data_source": summary.get("data_source"),
             "draw_year": summary["draw_year"],
         }
-
-    @property
-    def icon(self):
-        return "mdi:trophy-variant"

@@ -31,7 +31,9 @@
             "first_prize": { "name": "Hauptpreis (El Gordo)" },
             "second_prize": { "name": "Zweiter Preis" },
             "third_prize": { "name": "Dritter Preis" },
-            "ticket_prize": { "name": "Gewinn Ticket {ticket}" }
+            "fourth_prize_1": { "name": "Vierter Preis 1" },
+            "fourth_prize_2": { "name": "Vierter Preis 2" },
+            "ticket_prize": { "name": "Gewinn für Los {ticket}" }
         }
     }
 }

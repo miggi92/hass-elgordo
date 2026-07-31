@@ -7,6 +7,7 @@ from custom_components.elgordo.const import (
     INITIAL_FALLBACK_SUMMARY,
     TICKET_TYPE_BILLETE,
     TICKET_TYPE_DECIMO,
+    normalize_ticket_number,
     prize_for_ticket_type,
 )
 from custom_components.elgordo.coordinator import ElGordoCoordinator, SUMMARY_KEYS
@@ -46,3 +47,9 @@ def test_prize_is_converted_from_billete_to_configured_ticket_type():
 
     with pytest.raises(ValueError, match="Unsupported ticket type"):
         prize_for_ticket_type(1_000, "unknown")
+
+
+def test_ticket_number_is_normalized_to_five_digits():
+    assert normalize_ticket_number(5490) == "05490"
+    assert normalize_ticket_number("05490") == "05490"
+    assert normalize_ticket_number(None) is None
